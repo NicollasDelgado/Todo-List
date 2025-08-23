@@ -1,28 +1,31 @@
 {
-  "name": "todolist",
-  "version": "1.0.0",
-  "main": "index.ts",
-  "scripts": {
-    "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
-    "web": "expo start --web"
-  },
-  "dependencies": {
-    "@react-native-async-storage/async-storage": "2.1.2",
-    "expo": "53.0.20",
-    "expo-linear-gradient": "~14.1.5",
-    "expo-status-bar": "~2.2.3",
-    "moti": "^0.30.0",
-    "react": "19.0.0",
-    "react-native": "0.79.5",
-    "react-native-reanimated": "~3.17.4",
-    "react-native-svg": "15.11.2"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.25.2",
-    "@types/react": "~19.0.10",
-    "typescript": "~5.8.3"
-  },
-  "private": true
+  "expo": {
+    "name": "ToDoList",
+    "slug": "ToDoList",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "navigationBar": {
+        "backgroundColor": "#1A1A1A"
+      }
+    },
+    "web": {
+      "favicon": "./assets/icon.png"
+    }
+  }
 }

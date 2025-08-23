@@ -1,11 +1,34 @@
 import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
-  container: {
+  safeContainer: {
     flex: 1,
-    paddingHorizontal: 24,
+    backgroundColor: '#1A1A1A', // Cor de fundo para toda a tela incluindo áreas do sistema
   },
   
+  container: {
+    flex: 1,
+    backgroundColor: '#1A1A1A',
+  },
+
+  // Seção superior - cor #0D0D0D sólida (sem degradê)
+  topSection: {
+    backgroundColor: '#0D0D0D',
+    paddingHorizontal: 24,
+    // To make the background line appear at the middle of the input,
+    // the top section's height should be just the title content's height: 162px.
+    height: 192,
+  },
+
+  // Seção inferior - cor #1A1A1A (da metade do input para baixo)
+  bottomSection: {
+    flex: 1,
+    backgroundColor: '#1A1A1A',
+    paddingHorizontal: 24,
+    // This padding accounts for the bottom half of the input
+    paddingTop: 25, // Half of the input's height (50 / 2)
+  },
+
   // Container que vai conter tanto a logo quanto o título
   titleContainer: {
     flexDirection: 'row',
@@ -16,7 +39,7 @@ export const styles = StyleSheet.create({
     height: 60,
     fontFamily: 'Inter',
   },
-  
+
   // Estilo da logo
   logo: {
     marginTop: 20,
@@ -25,7 +48,7 @@ export const styles = StyleSheet.create({
     resizeMode: "contain",
     marginRight: 0,
   },
-  
+
   // Container para o texto "todo"
   textContainer: {
     flexDirection: 'row',
@@ -39,7 +62,7 @@ export const styles = StyleSheet.create({
     includeFontPadding: false,
     fontFamily: 'Inter',
   },
-  
+
   do: {
     color: '#5E60CE', // roxo mais próximo ao design
     fontSize: 40,
@@ -51,8 +74,10 @@ export const styles = StyleSheet.create({
   // Estilos do input
   inputContainer: {
     flexDirection: 'row',
-    marginBottom: 32,
-    paddingHorizontal: 0,
+    // Pulls the input up by half its height to overlap the section boundary
+    marginTop: -25, // Half of the input's height (50 / 2)
+    paddingHorizontal: 0, // Keep horizontal padding consistent with sections
+    zIndex: 1, // Ensure input is rendered above the background sections
   },
 
   input: {
@@ -60,12 +85,17 @@ export const styles = StyleSheet.create({
     backgroundColor: '#262626',
     borderRadius: 6,
     padding: 16,
+    paddingLeft: 16,
     color: '#F2F2F2',
     fontSize: 16,
     borderWidth: 1,
-    borderColor: '#0D0D0D',
-    marginRight: 4,
+    borderColor: '#262626', // cor padrão quando não está em foco (mesma cor do fundo)
+    // Removed marginRight to increase width
     fontFamily: 'Inter',
+    height: 50, // Explicitly set height based on padding, font size, and border
+    marginRight: 7,
+    marginLeft: 0,
+    marginTop: 28,
   },
 
   addButton: {
@@ -75,23 +105,41 @@ export const styles = StyleSheet.create({
     height: 52,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 4,
+    paddingHorizontal: 12,
+    paddingLeft: 15,
+    paddingRight: 15,
+    marginTop: 28,
+    // Removed marginLeft to increase input width
+  },
+
+  // Círculo em volta do símbolo + (apenas bordas)
+  addButtonCircle: {
+    backgroundColor: 'transparent', // Transparente para não preencher
+    borderWidth: 2, // Espessura da borda
+    borderColor: '#F2F2F2', // Cor da borda (branca)
+    borderRadius: 15, // Faz o círculo perfeito
+    width: 23,
+    height: 23,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   addButtonText: {
     color: '#F2F2F2',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center',
+    includeFontPadding: false,
+    marginLeft: 1,
+    marginTop: -2,
   },
 
   // Estilos dos contadores
   countersContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 20,
-    paddingVertical: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#333333',
+    borderTopColor: '#262626', // linha divisória entre input e contadores
+    marginTop: 15, // Added margin to separate from the input
   },
 
   counterItem: {
@@ -114,7 +162,7 @@ export const styles = StyleSheet.create({
   },
 
   counterBadge: {
-    backgroundColor: '#333333',
+    backgroundColor: '#262626', // ajustado para contrastar com o fundo #333333
     borderRadius: 999,
     paddingHorizontal: 8,
     paddingVertical: 2,
@@ -135,14 +183,15 @@ export const styles = StyleSheet.create({
 
   // Estilos dos itens de tarefa
   taskItem: {
-    backgroundColor: '#262626',
+    backgroundColor: '#333333',
     borderRadius: 8,
     padding: 12,
     marginBottom: 8,
+    marginTop: 20,
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: '#333333',
+    borderColor: '#404040', // ajustado para contrastar com o fundo #333333
     minHeight: 64,
   },
 
@@ -189,32 +238,25 @@ export const styles = StyleSheet.create({
     fontSize: 14,
   },
 
-  // Estado vazio
+  // Estado vazio - prancheta agora aparece embaixo dos contadores (MANTIDO IGUAL)
   emptyState: {
-    flex: 1,
+    marginTop: 40,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 48,
-    paddingBottom: 48,
-  },
-
-  emptyIcon: {
-    fontSize: 56,
-    marginBottom: 16,
-    opacity: 0.3,
   },
 
   emptyTitle: {
     color: '#808080',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 4,
+    marginTop: 16,
   },
 
   emptySubtitle: {
     color: '#808080',
-    fontSize: 14,
+    fontSize: 15,
     textAlign: 'center',
   },
 });
