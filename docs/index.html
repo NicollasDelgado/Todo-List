@@ -4,212 +4,611 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List - React Native & Expo</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
+
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background: #000;
+            border-radius: 50px;
+            padding: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            position: relative;
+        }
+
+        .phone-notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 160px;
+            height: 30px;
+            background: #000;
+            border-radius: 0 0 20px 20px;
+            z-index: 100;
+        }
+
         .phone-screen {
-            scrollbar-width: thin;
-            scrollbar-color: #cbd5e1 transparent;
+            width: 100%;
+            height: 100%;
+            background: #1A1A1A;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
         }
-        .phone-screen::-webkit-scrollbar {
-            width: 4px;
+
+        .status-bar {
+            height: 47px;
+            background: #0D0D0D;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            padding-top: 10px;
         }
-        .phone-screen::-webkit-scrollbar-track {
+
+        .status-bar-time {
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .status-bar-icons {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .status-icon {
+            width: 18px;
+            height: 12px;
+            border: 1.5px solid #fff;
+            border-radius: 2px;
+        }
+
+        /* Top Section - #0D0D0D */
+        .top-section {
+            background: #0D0D0D;
+            padding: 0 24px;
+            height: 145px;
+        }
+
+        .title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-top: 24px;
+            padding-bottom: 32px;
+        }
+
+        .logo {
+            width: 32px;
+            height: 36px;
+            margin-right: 8px;
+            object-fit: contain;
+        }
+
+        .title-text {
+            display: flex;
+            font-size: 40px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .title-to {
+            color: #4EA8DE;
+        }
+
+        .title-do {
+            color: #5E60CE;
+        }
+
+        /* Input Container */
+        .input-container {
+            display: flex;
+            gap: 7px;
+            position: relative;
+            z-index: 10;
+            margin-top: -25px;
+        }
+
+        .input-field {
+            flex: 1;
+            background: #262626;
+            border: 1px solid #262626;
+            border-radius: 6px;
+            padding: 16px;
+            color: #F2F2F2;
+            font-size: 16px;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #5E60CE;
+        }
+
+        .input-field::placeholder {
+            color: #808080;
+        }
+
+        .add-button {
+            width: 52px;
+            height: 52px;
+            background: #1E6F9F;
+            border: none;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .add-button:hover {
+            opacity: 0.8;
+        }
+
+        .add-button-circle {
+            width: 23px;
+            height: 23px;
+            border: 2px solid #F2F2F2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #F2F2F2;
+            font-size: 18px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        /* Bottom Section - #1A1A1A */
+        .bottom-section {
+            background: #1A1A1A;
+            flex: 1;
+            padding: 25px 24px 24px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: calc(100% - 192px);
+        }
+
+        /* Counters */
+        .counters-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+
+        .counter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .counter-label {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .counter-created {
+            color: #4EA8DE;
+        }
+
+        .counter-completed {
+            color: #8284FA;
+        }
+
+        .counter-badge {
+            background: #262626;
+            border-radius: 999px;
+            padding: 2px 8px;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .counter-text {
+            color: #D9D9D9;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Tasks Container */
+        .tasks-container {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .tasks-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tasks-container::-webkit-scrollbar-track {
             background: transparent;
         }
-        .phone-screen::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 10px;
+
+        .tasks-container::-webkit-scrollbar-thumb {
+            background: #262626;
+            border-radius: 3px;
+        }
+
+        /* Empty State */
+        .empty-state {
+            margin-top: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .clipboard-icon {
+            width: 56px;
+            height: 56px;
+            position: relative;
+            opacity: 0.3;
+            margin-bottom: 16px;
+        }
+
+        .clipboard-body {
+            width: 47.6px;
+            height: 56px;
+            border: 3px solid #808080;
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .clipboard-notch {
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            width: 20px;
+            height: 20px;
+            background: #1A1A1A;
+            z-index: 10;
+        }
+
+        .clipboard-clip {
+            position: absolute;
+            top: -6px;
+            left: 13%;
+            width: 30px;
+            height: 10px;
+            background: #262626;
+            border: 2px solid #808080;
+            border-radius: 6px;
+            z-index: 2;
+        }
+
+        .clipboard-line {
+            position: absolute;
+            top: 1px;
+            left: 2px;
+            width: calc(85% - 6px);
+            height: 4px;
+            background: #262626;
+            border-radius: 1.5px;
+        }
+
+        .clipboard-lines {
+            padding: 14px 8px;
+        }
+
+        .clipboard-text-line {
+            height: 3px;
+            background: #808080;
+            border-radius: 1.5px;
+            margin-bottom: 5.6px;
+        }
+
+        .clipboard-text-line:nth-child(1),
+        .clipboard-text-line:nth-child(2) {
+            width: 80%;
+        }
+
+        .clipboard-text-line:nth-child(3) {
+            width: 50%;
+            margin-bottom: 0;
+        }
+
+        .empty-title {
+            color: #808080;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .empty-subtitle {
+            color: #808080;
+            font-size: 15px;
+        }
+
+        /* Task Item */
+        .task-item {
+            background: #333333;
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            min-height: 64px;
+        }
+
+        .check-button {
+            width: 18px;
+            height: 18px;
+            border: 2px solid #4EA8DE;
+            border-radius: 50%;
+            margin-right: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .check-button:hover {
+            background: rgba(78, 168, 222, 0.1);
+        }
+
+        .check-button.completed {
+            background: #5E60CE;
+            border-color: #5E60CE;
+        }
+
+        .check-icon {
+            color: #F2F2F2;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .task-text {
+            flex: 1;
+            color: #F2F2F2;
+            font-size: 14px;
+            line-height: 19px;
+            word-wrap: break-word;
+        }
+
+        .task-text.completed {
+            color: #808080;
+            text-decoration: line-through;
+        }
+
+        .delete-button {
+            padding: 8px;
+            margin-left: 8px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            font-size: 14px;
+            transition: opacity 0.2s;
+            flex-shrink: 0;
+        }
+
+        .delete-button:hover {
+            opacity: 0.7;
+        }
+
+        .home-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 134px;
+            height: 5px;
+            background: #fff;
+            border-radius: 100px;
+            opacity: 0.3;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen">
-    
-    <div class="container mx-auto px-4 py-12">
-        <!-- Header -->
-        <div class="text-center mb-12">
-            <div class="flex items-center justify-center gap-3 mb-4">
-                <div class="text-6xl">📝</div>
-                <h1 class="text-5xl font-bold text-white">Todo List</h1>
+<body>
+    <div class="phone-frame">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+            <!-- Status Bar -->
+            <div class="status-bar">
+                <div class="status-bar-time">9:41</div>
+                <div class="status-bar-icons">
+                    <div class="status-icon"></div>
+                    <div class="status-icon" style="width: 12px;"></div>
+                </div>
             </div>
-            <p class="text-xl text-purple-200 mb-6">
-                Aplicação mobile moderna com React Native & Expo
-            </p>
-            <div class="flex items-center justify-center gap-4 flex-wrap">
-                <a href="https://github.com/NicollasDelgado/Todo-List" target="_blank" class="inline-flex items-center gap-2 bg-white text-purple-900 px-6 py-3 rounded-lg font-semibold hover:bg-purple-100 transition-all">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    Ver no GitHub
-                </a>
-                <button class="inline-flex items-center gap-2 bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-all">
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
-                    Baixar APK
-                </button>
+
+            <!-- Top Section -->
+            <div class="top-section">
+                <div class="title-container">
+                    <img class="logo" src="https://raw.githubusercontent.com/NicollasDelgado/Todo-List/main/assets/icon.png" alt="Logo" />
+                    <div class="title-text">
+                        <span class="title-to">to</span>
+                        <span class="title-do">do</span>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <input 
+                        type="text" 
+                        id="taskInput"
+                        class="input-field" 
+                        placeholder="Adicione uma nova tarefa"
+                    />
+                    <button class="add-button" onclick="handleTaskAdd()">
+                        <div class="add-button-circle">+</div>
+                    </button>
+                </div>
             </div>
+
+            <!-- Bottom Section -->
+            <div class="bottom-section">
+                <div class="counters-container">
+                    <div class="counter-item" onclick="setFilter('created')">
+                        <span class="counter-label counter-created">Criadas</span>
+                        <div class="counter-badge">
+                            <span class="counter-text" id="createdCount">0</span>
+                        </div>
+                    </div>
+                    <div class="counter-item" onclick="setFilter('completed')">
+                        <span class="counter-label counter-completed">Concluídas</span>
+                        <div class="counter-badge">
+                            <span class="counter-text" id="completedCount">0</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tasks-container" id="tasksList">
+                    <!-- Empty State -->
+                    <div class="empty-state" id="emptyState">
+                        <div class="clipboard-icon">
+                            <div class="clipboard-line"></div>
+                            <div class="clipboard-body">
+                                <div class="clipboard-notch"></div>
+                                <div class="clipboard-clip"></div>
+                                <div class="clipboard-lines">
+                                    <div class="clipboard-text-line"></div>
+                                    <div class="clipboard-text-line"></div>
+                                    <div class="clipboard-text-line"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="empty-title">Você ainda não tem tarefas cadastradas</div>
+                        <div class="empty-subtitle">Crie tarefas e organize seus itens a fazer</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="home-indicator"></div>
         </div>
+    </div>
 
-        <!-- Main Content Grid -->
-        <div class="grid lg:grid-cols-2 gap-8 max-w-7xl mx-auto">
-            <!-- Left Side - Phone Simulator -->
-            <div class="flex items-center justify-center">
-                <div class="relative">
-                    <!-- Phone Container -->
-                    <div class="w-[375px] h-[812px] bg-black rounded-[50px] shadow-2xl p-3 relative">
-                        <!-- Notch -->
-                        <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-40 h-7 bg-black rounded-b-3xl z-10"></div>
-                        
-                        <!-- Screen -->
-                        <div class="w-full h-full bg-white rounded-[40px] overflow-hidden relative">
-                            <!-- Status Bar -->
-                            <div class="h-12 bg-gradient-to-r from-purple-600 to-blue-600 flex items-center justify-between px-6 pt-8">
-                                <span class="text-white text-xs font-medium">9:41</span>
-                                <div class="flex gap-1">
-                                    <div class="w-4 h-3 border border-white rounded-sm"></div>
-                                    <div class="w-2 h-3 border border-white rounded-sm"></div>
-                                </div>
-                            </div>
+    <script>
+        let tasks = [];
+        let filter = 'created';
 
-                            <!-- App Content -->
-                            <div class="flex flex-col h-[calc(100%-3rem)] bg-gray-50">
-                                <!-- Header -->
-                                <div class="bg-gradient-to-r from-purple-600 to-blue-600 px-6 pt-6 pb-8 rounded-b-3xl shadow-lg">
-                                    <h2 class="text-white text-3xl font-bold mb-2">Minhas Tarefas</h2>
-                                    <div class="flex items-center gap-2">
-                                        <div class="bg-white bg-opacity-20 rounded-full px-4 py-1">
-                                            <p class="text-white text-sm font-medium" id="taskCounter">
-                                                1 de 3 concluídas
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
+        function loadTasks() {
+            const stored = localStorage.getItem('tasks');
+            if (stored) {
+                tasks = JSON.parse(stored);
+                renderTasks();
+            }
+        }
 
-                                <!-- Task Input -->
-                                <div class="px-6 -mt-6 mb-4">
-                                    <div class="bg-white rounded-2xl shadow-lg p-4 flex gap-3">
-                                        <input
-                                            type="text"
-                                            id="taskInput"
-                                            placeholder="Adicionar nova tarefa..."
-                                            class="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-400 text-sm"
-                                        />
-                                        <button onclick="addTask()" class="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-2 hover:shadow-lg transition-all active:scale-95">
-                                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-                                        </button>
-                                    </div>
-                                </div>
+        function saveTasks() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
 
-                                <!-- Tasks List -->
-                                <div class="flex-1 overflow-y-auto px-6 pb-6 phone-screen" id="tasksList">
-                                    <!-- Tasks will be rendered here -->
-                                </div>
-                            </div>
-                        </div>
+        function handleTaskAdd() {
+            const input = document.getElementById('taskInput');
+            const text = input.value.trim();
+            
+            if (text) {
+                const newTask = {
+                    id: Date.now().toString(),
+                    title: text,
+                    isCompleted: false
+                };
+                tasks.push(newTask);
+                input.value = '';
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function handleTaskToggle(taskId) {
+            tasks = tasks.map(task =>
+                task.id === taskId ? { ...task, isCompleted: !task.isCompleted } : task
+            );
+            saveTasks();
+            renderTasks();
+        }
+
+        function handleTaskDelete(taskId) {
+            if (confirm('Tem certeza que você deseja remover esta tarefa?')) {
+                tasks = tasks.filter(task => task.id !== taskId);
+                saveTasks();
+                renderTasks();
+            }
+        }
+
+        function setFilter(newFilter) {
+            filter = newFilter;
+            renderTasks();
+        }
+
+        function renderTasks() {
+            const tasksList = document.getElementById('tasksList');
+            const emptyState = document.getElementById('emptyState');
+            
+            // Update counters
+            const createdCount = tasks.length;
+            const completedCount = tasks.filter(t => t.isCompleted).length;
+            document.getElementById('createdCount').textContent = createdCount;
+            document.getElementById('completedCount').textContent = completedCount;
+
+            // Filter tasks
+            const filteredTasks = filter === 'completed' 
+                ? tasks.filter(t => t.isCompleted)
+                : tasks;
+
+            // Show/hide empty state
+            if (tasks.length === 0) {
+                emptyState.style.display = 'flex';
+                const existingTasks = tasksList.querySelectorAll('.task-item');
+                existingTasks.forEach(task => task.remove());
+                return;
+            } else {
+                emptyState.style.display = 'none';
+            }
+
+            // Render tasks
+            tasksList.innerHTML = '';
+            filteredTasks.forEach(task => {
+                const taskItem = document.createElement('div');
+                taskItem.className = 'task-item';
+                taskItem.innerHTML = `
+                    <div class="check-button ${task.isCompleted ? 'completed' : ''}" onclick="handleTaskToggle('${task.id}')">
+                        ${task.isCompleted ? '<span class="check-icon">✓</span>' : ''}
                     </div>
+                    <div class="task-text ${task.isCompleted ? 'completed' : ''}">${task.title}</div>
+                    <button class="delete-button" onclick="handleTaskDelete('${task.id}')">🗑️</button>
+                `;
+                tasksList.appendChild(taskItem);
+            });
+        }
 
-                    <!-- Home Indicator -->
-                    <div class="absolute bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gray-400 rounded-full"></div>
-                    
-                    <!-- Interactive Badge -->
-                    <div class="absolute -bottom-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                        ✨ Experimente agora!
-                    </div>
-                </div>
-            </div>
+        // Enter key to add task
+        document.getElementById('taskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                handleTaskAdd();
+            }
+        });
 
-            <!-- Right Side - Documentation -->
-            <div class="space-y-6">
-                <!-- Features Card -->
-                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                    <h2 class="text-2xl font-bold text-white mb-4 flex items-center gap-2">
-                        ✨ Funcionalidades
-                    </h2>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">✅</span>
-                            <span>Adicionar novas tarefas facilmente</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">✏️</span>
-                            <span>Editar tarefas existentes</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">☑️</span>
-                            <span>Marcar como concluída/pendente</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">🗑️</span>
-                            <span>Excluir tarefas com um toque</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">💾</span>
-                            <span>Persistência local (AsyncStorage)</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">📱</span>
-                            <span>Design responsivo e nativo</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">🎨</span>
-                            <span>Interface moderna e intuitiva</span>
-                        </div>
-                        <div class="flex items-center gap-3 text-purple-100">
-                            <span class="text-2xl">⚡</span>
-                            <span>Performance otimizada</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tech Stack Card -->
-                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                    <h2 class="text-2xl font-bold text-white mb-4">🚀 Tecnologias</h2>
-                    <div class="flex flex-wrap gap-2">
-                        <span class="bg-purple-600 bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm font-medium">React Native</span>
-                        <span class="bg-purple-600 bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm font-medium">Expo</span>
-                        <span class="bg-purple-600 bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm font-medium">JavaScript</span>
-                        <span class="bg-purple-600 bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm font-medium">AsyncStorage</span>
-                        <span class="bg-purple-600 bg-opacity-50 text-white px-4 py-2 rounded-lg text-sm font-medium">React Hooks</span>
-                    </div>
-                </div>
-
-                <!-- Installation Card -->
-                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                    <h2 class="text-2xl font-bold text-white mb-4">📦 Instalação</h2>
-                    <div class="space-y-3">
-                        <div class="bg-black bg-opacity-30 rounded-lg p-4 font-mono text-sm">
-                            <div class="text-purple-300 mb-2"># Clone o repositório</div>
-                            <div class="text-white">git clone https://github.com/NicollasDelgado/Todo-List.git</div>
-                        </div>
-                        <div class="bg-black bg-opacity-30 rounded-lg p-4 font-mono text-sm">
-                            <div class="text-purple-300 mb-2"># Instale as dependências</div>
-                            <div class="text-white">npm install</div>
-                        </div>
-                        <div class="bg-black bg-opacity-30 rounded-lg p-4 font-mono text-sm">
-                            <div class="text-purple-300 mb-2"># Inicie o projeto</div>
-                            <div class="text-white">expo start</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Expo Go Card -->
-                <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 text-white">
-                    <div class="flex items-center gap-3 mb-4">
-                        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
-                        <h2 class="text-2xl font-bold">Teste no seu celular!</h2>
-                    </div>
-                    <p class="mb-4">Baixe o Expo Go e escaneie o QR Code para testar o app:</p>
-                    <div class="flex gap-3 flex-wrap">
-                        <a href="https://apps.apple.com/app/expo-go/id982107779" target="_blank" class="flex-1 bg-white text-purple-600 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all min-w-[150px] text-center">
-                            📱 iOS App Store
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=host.exp.exponent" target="_blank" class="flex-1 bg-white text-purple-600 py-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all min-w-[150px] text-center">
-                            🤖 Google Play
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Author Card -->
-                <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-2xl p-6 border border-white border-opacity-20">
-                    <h2 class="text-2xl font-bold text-white mb-4">👨‍💻 Desenvolvedor</h2>
-                    <div class="flex items-center gap-4">
-                        <div class="w-16 h-16 bg-gradient-to-br from-purple-600 to-blue-600 rounded-
+        // Load tasks on page load
+        loadTasks();
+        renderTasks();
+    </script>
+</body>
+</html>
